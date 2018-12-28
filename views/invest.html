@@ -1,0 +1,109 @@
+{{##def.page_title = 'Invest' #}}
+
+{{##def.content:
+<script type="text/javascript">
+    function logout() {
+        if (document.getElementById('logout') ) {
+            if (confirm("Are you sure you want to log out?")) {
+                document.getElementById("logout").submit();
+            }
+        }
+    }
+</script>
+<form action="/logout" method="post" id='logout'></form>
+<div class="content row panel radius">
+    <div class="settings">
+        <div class="small-2 columns">
+            <ul class="menu">
+                <li>
+                    <a href="/account">Account</a>
+                </li>
+                <li class="active">
+                  Invest
+                </li>
+                <li>
+                    <a href="/deposit">Deposit</a>
+                </li>
+                <li>
+                    <a href="/withdraw">Withdraw</a>
+                </li>
+                <li>
+                    <a href="/tip">Tips</a>
+                </li>
+                <li>
+                    <a href="/weeklyprizes">Prizes</a>
+                </li>
+                <li>
+                    <a href="/support">Support</a>
+                </li>
+                 <li>
+                    <a href="/security">Security</a>
+                </li>
+                <li>
+                    <a onclick="logout();">
+                        Logout
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+       <div class="small-10 columns sets-content">
+           <a class="button orange float-left" href="/investrequest">Invest</a>
+           <a class="button orange float-right" href="/divestrequest">Divest</a>
+            {{?it.investments.length > 0}}
+                <table>
+                    <thead>
+                        <tr>
+                            <td >Coin</td>
+                            <td >Amount</td>
+                            <td class="show-for-medium-up">commission</td>
+                            <td class="show-for-medium-up">prev balance</td>
+                            <td class="show-for-medium-up">new balance</td>
+                            <td class="show-for-medium-up">percentage</td>
+                            <td>status</td>
+                            <td>action</td>
+                            <td class="show-for-medium-up">date</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {{~it.investments :investment:index}}
+                        <tr>
+                            <td>{{=investment.coin.toUpperCase()}}</td>
+                            {{?investment.amount > 0}}
+                                <td ><font color=green>{{#def.format: {n: investment.amount, decimals: 8 } }} </font></td>
+                            {{??}}
+                                <td ><font color=red>{{#def.format: {n: investment.amount, decimals: 8 } }} </font></td>
+                            {{?}}
+
+                            <td class="show-for-medium-up">{{#def.format: {n: investment.commission_amount, decimals: 8 } }} </td>
+                            <td class="show-for-medium-up">{{#def.format: {n: investment.investment_balance_prev, decimals: 8 } }} </td>
+                            {{?investment.action === "divest" || investment.action === "weekly-commission" }}
+                                <td class="show-for-medium-up">{{#def.format: {n: investment.investment_balance_prev + investment.amount - investment.commission_amount, decimals: 8 } }} </td>
+                                {{?investment.site_balance > 0}}
+                                    <td class="show-for-medium-up">{{= ((investment.investment_balance_prev + investment.amount) / (investment.site_balance - investment.amount) * 100).toFixed(4)}}</td>
+                                {{??}}
+                                    <td class="show-for-medium-up">0.0000</td>
+                                {{?}}
+                            {{??}}
+                                <td class="show-for-medium-up">{{#def.format: {n: investment.investment_balance_prev + investment.amount, decimals: 8 } }} </td>
+                                <td class="show-for-medium-up">{{= ((investment.amount + investment.investment_balance_prev) / (investment.site_balance + investment.amount) * 100).toFixed(4)}}</td>
+                            {{?}}
+                            <td>{{=investment.status }}</td>
+                            <td> {{=investment.action}}</td>
+                            <td class="show-for-medium-up">{{=investment.created}}</td>
+                        </tr>
+                    {{~}}
+                    </tbody>
+                </table>
+            {{??}}
+            <br>
+            <br>
+            <br>
+            <p>You have not made any investments <strong>yet</strong>.</p>
+            {{?}}
+        </div>
+    </div>
+</div>
+
+#}}
+{{#def.include('./template/main')}}

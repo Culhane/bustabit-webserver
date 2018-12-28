@@ -1,0 +1,132 @@
+{{##def.page_title = 'Admin - Recent Withdraws' #}}
+{{##def.content:
+<style>
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey; 
+    border-radius: 10px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: lightgrey; 
+    border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #b30000; 
+}
+</style>
+<div class="content row panel radius">
+
+    <div class="settings">
+        <div class="small-2 columns">
+            <h5><b>Admin Panel</b></h5>
+            <ul class="menu">
+                <li>
+                    <a href="/admin">Overview</a>
+                </li>
+                <li  >
+                  <a href="/admin/commissions?p=1">Commissions </a>
+                </li>
+                <li>
+                  <a href="/admin/weeklycommissions">Weekly</a>
+                </li>
+                <li >
+                    <a href="/admin/recentdeposits">Deposits</a>
+                </li>
+                <li >
+                    Withdraws
+                </li>
+                <li>
+                    <a href="/admin/btcfees">Btc Fees</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="small-10 columns sets-content">
+                <hr>
+                <h4>Total withdraws: {{#def.format: {n: it.withdrawTotal, decimals: 8 } }} CLAM</h4>
+                <hr>
+                <h4>Showing last 25 withdraws</h4>
+
+                {{?it.entries.length > 0}}
+                    <table>
+                        <thead>
+                            <tr>
+                                <td>Coin</td>
+                                <td>Uid</td>
+                                <td>Amount</td>
+                                <td>Address</td>
+                                <td>Txid</td>
+                                <td>Audit</td>
+                                <td>Created</td>
+                                <td>Completed</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {{~it.entries :withdraw:index}}
+                            <tr>
+                                <td>{{=withdraw.coin}}
+                                <td>{{=withdraw.user_id}}</td>
+                                {{?withdraw.coin === 'btc'}}
+                                    <td><font color=green>{{#def.format: {n: withdraw.amount, decimals: 8 } }} BTC</font></td>
+                                {{??}}
+                                     <td><font color=green>{{#def.format: {n: withdraw.amount, decimals: 8 } }} CLAM</font></td>
+                                {{?}}
+                                <td>{{=withdraw.address }}</td>
+                                <td>{{=withdraw.txid }}</td>
+                                <td>{{=withdraw.audit }}</td>
+                                <td>{{=withdraw.created}}</td>
+                                <td>{{=withdraw.completed}}</td>
+                            </tr>
+                        {{~}}
+                        </tbody>
+                    </table>
+                {{??}}
+                <br>
+                <br>
+                <br>
+                <p>No deposits have been recivied <strong>yet</strong>.</p>
+                {{?}}
+        </div>
+    </div>
+    </div>
+#}}
+{{#def.include('./template/main')}}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

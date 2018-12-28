@@ -19,7 +19,7 @@
                     <a href="/account">Account</a>
                 </li>
                 <li>
-                    <a href="/security">Security</a>
+                  <a href="/invest">Invest</a>
                 </li>
                 <li>
                     <a href="/deposit">Deposit</a>
@@ -27,11 +27,19 @@
                 <li class="active">
                     Withdraw
                 </li>
-
                 <li>
-                    <a href="/support">Support</a>
+                    <a href="/tip">Tips</a>
                 </li>
                 <li>
+                    <a href="/weeklyprizes">Prizes</a>
+                </li>
+                <li >
+                   <a href="/support">Support</a>
+                </li>
+                <li>
+                    <a href="/security">Security</a>
+                </li>
+                 <li>
                     <a onclick="logout();">
                         Logout
                     </a>
@@ -39,14 +47,13 @@
             </ul>
         </div>
         <div class="small-10 columns sets-content">
-            <a class="border-button right green" href="/withdraw/request">Request Withdraw</a>
-            <h5 >Withdraw History</h5>
-            <hr>
+            <a class="button orange float-right" href="/withdraw/request">Request Withdraw</a>
             {{?it.user.withdrawals.length > 0}}
                 <table>
                     <thead>
                         <tr>
-                            <td>Bits</td>
+                            <td>Currency</td>
+                            <td>Amount</td>
                             <td>Destination Address</td>
                             <td>Status</td>
                             <td class="show-for-large-up">Created</td>
@@ -56,7 +63,8 @@
                     <tbody>
                         {{~it.user.withdrawals :withdrawal:index}}
                             <tr>
-                                <td>{{#def.format: {n: withdrawal.amount, decimals: 2 } }}</td>
+                                <td>{{=withdrawal.coin}}</td>
+                                <td>{{#def.format: {n: withdrawal.amount, decimals: 8 } }}</td>
                                 <td>
                                     <span class="visible-for-small-only">{{=withdrawal.shortDestination}}...</span>
                                     <span class="show-for-medium-up">{{=withdrawal.destination}} </span>
@@ -64,9 +72,13 @@
                                 </td>
                                 <td>
                                     {{?withdrawal.status}}
-                                         <a href="https://blockchain.info/tx/{{=withdrawal.status}}" target="_blank">Transferred</a>
+                                        {{?withdrawal.coin === 'btc'}}
+                                            <a href="http://blockchain.info/tx/{{=withdrawal.status}}" target="_blank">Transfered</a>
+                                        {{??}}
+                                            <a href="http://khashier.com/tx/{{=withdrawal.status}}" target="_blank">Transfered</a>
+                                        {{?}}
                                     {{??}}
-                                        in progress
+                                        PENDING
                                     {{?}}
                                 </td>
                                 <td class="show-for-large-up">{{=withdrawal.created}}</td>
@@ -85,4 +97,4 @@
 </div>
 
 #}}
-{{#def.include('./template/main_old')}}
+{{#def.include('./template/main')}}

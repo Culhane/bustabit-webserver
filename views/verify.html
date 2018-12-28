@@ -1,0 +1,45 @@
+<html><head><style type="text/css"></style></head><body><header>
+  <title>Game verifier</title>
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+</header>
+
+
+  <div class="container">
+    <div class="col-md-12">
+      <h1>NXT Bubble verifier</h1>
+    </div>
+
+    <div class="col-md-6">
+      <p>Fill in this form to verify the outcome of the games</p>
+      <form lpformnum="1">
+        <div class="form-group">
+          <label>Hash of game to check</label>
+          <input type="text" class="form-control" id="hash1">
+        </div>
+        <div class="form-group">
+          <label>Outcome of game to check</label>
+          <input type="text" class="form-control" id="outcome1" disabled="">
+        </div>
+        <div class="form-group">
+          <label>Hash of game before</label>
+          <input type="text" class="form-control" id="hash2" disabled="">
+        </div>
+        <div class="form-group">
+          <label>Outcome of game before</label>
+          <input type="text" class="form-control" id="outcome2" disabled="">
+        </div>
+        <input type="submit" class="btn btn-success" id="submit" value="Submit">
+      </form>
+    </div>
+    <div class="col-md-6">
+
+    </div>
+  </div>
+
+  <script src="bower_components/jquery/dist/jquery.min.js"></script>
+  <script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/sha256.js"></script>
+  <script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/hmac-sha256.js"></script>
+  <script src="app.js"></script>
+
+
+<script id="hiddenlpsubmitdiv" style="display: none;"></script><script>try{(function() { for(var lastpass_iter=0; lastpass_iter < document.forms.length; lastpass_iter++){ var lastpass_f = document.forms[lastpass_iter]; if(typeof(lastpass_f.lpsubmitorig2)=="undefined"){ lastpass_f.lpsubmitorig2 = lastpass_f.submit; if (typeof(lastpass_f.lpsubmitorig2)=='object'){ continue;}lastpass_f.submit = function(){ var form=this; var customEvent = document.createEvent("Event"); customEvent.initEvent("lpCustomEvent", true, true); var d = document.getElementById("hiddenlpsubmitdiv"); if (d) {for(var i = 0; i < document.forms.length; i++){ if(document.forms[i]==form){ if (typeof(d.innerText) != 'undefined') { d.innerText=i.toString(); } else { d.textContent=i.toString(); } } } d.dispatchEvent(customEvent); }form.lpsubmitorig2(); } } }})()}catch(e){}</script></body></html>

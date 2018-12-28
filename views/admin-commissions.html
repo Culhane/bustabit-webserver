@@ -1,0 +1,135 @@
+{{##def.page_title = 'Admin - Commission Overview' #}}
+{{##def.content:
+<style>
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey; 
+    border-radius: 10px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: lightgrey; 
+    border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #b30000; 
+}
+</style>
+<div class="content row panel radius">
+
+    <div class="settings">
+        <div class="small-2 columns">
+            <h5><b>Admin Panel</b></h5>
+            <ul class="menu">
+                <li>
+                    <a href="/admin">Overview</a>
+                </li>
+                <li  class="active">
+                  Commissions
+                </li>
+                <li>
+                  <a href="/admin/weeklycommissions">Weekly</a>
+                </li>
+                <li>
+                    <a href="/admin/recentdeposits">Deposits</a>
+                </li>
+                <li>
+                    <a href="/admin/recentwithdraws">Withdraws</a>
+                </li>
+                <li>
+                    <a href="/admin/btcfees">Btc Fees</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="small-10 columns sets-content">
+            <hr>
+                {{? it.showing_last}}
+                    <h4>Showing  {{= it.entries_from}} to {{= it.entries_to}}</h4>
+                {{??}}
+                    <h4>Showing last {{= it.entries_to - it.entries_from + 1}} entries</h4>
+                {{?}}
+
+
+                {{?it.entries.length > 0}}
+                    <table>
+                        <thead>
+                            <tr><td>Coin</td><td>Amount</td><td>From UID</td><td>Reason</td><td>Date</td></tr>
+                        </thead>
+                        <tbody>
+                        {{~it.entries :commission:index}}
+                            <tr>
+                                <td>{{=commission.coin}}
+
+                                {{?commission.coin === 'btc'}}
+                                         <td><font color=green>{{#def.format: {n: commission.amount / 1e6, decimals: 8 } }} BTC</font></td>
+                                {{??}}
+                                     <td><font color=green>{{#def.format: {n: commission.amount / 1e6, decimals: 8 } }} CLAM</font></td>
+                                {{?}}
+                                
+                            
+                                <td>{{=commission.from_user }}</td>
+                                <td>{{=commission.reason }}</td>
+                                <td>{{=commission.created}}</td>
+                            </tr>
+                        {{~}}
+                        </tbody>
+                    </table>
+                {{??}}
+                <br>
+                <br>
+                <br>
+                <p>No commissions have been recivied <strong>yet</strong>.</p>
+                {{?}}
+
+                {{? it.previous_page }}
+                <a href="?p=1">First</a>
+                <a href="{{= it.previous_page }}">Previous</a>
+                {{?}}
+
+                {{? it.next_page }}
+                <a href="{{= it.next_page }}">Newer</a>
+                {{?}}
+        </div>
+    </div>
+    </div>
+#}}
+{{#def.include('./template/main')}}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,120 @@
+{{##def.page_title = 'FreeBitcoins.com - BlastOFF Weekly Clamcoin ePeen Champs' #}}
+{{##def.page_description = 'Every week we give weekly free coin bonuses on Sunday according to player ranks on this page. There are two weekly categories, and they both pay an equal amount.' #}}
+
+{{##def.content:
+<div class="content row panel radius">
+    <a href="/leaderboard/btc" class="button orange">Bitcoin All Time</a>
+    <a href="/weekly-leaderboard/btc" class="button orange">Bitcoin Weekly</a>
+    <a href="/leaderboard/clam" class="button orange">Clamcoin All Time</a>
+    <a href="/weekly-leaderboard/clam" class="button green">Clamcoin Weekly</a>
+
+    <h5 id="top">CLAM Weekly Leaderboard Promotion <strong>Week {{=it.week}} - {{=it.year}}</strong></h5>
+    <a href="/weekly-leaderboard/clam?year={{=it.previousYear}}&week={{=it.previousWeek}}">&#xAB; Previous</a>
+    &nbsp;
+    <a href="/weekly-leaderboard/clam?year={{=it.nextYear}}&week={{=it.nextWeek}}">Next &#xbb;</a>
+    <hr>
+    <h4> Total Weeks Prize Pool {{#def.format: { n: it.prize_pool / Math.pow(10,6), decimals: 8 } }} CLAM  ( <a href="https://games.freebitcoins.com/faq#weekly">Learn how to help fund this prize</a> )</h4>
+
+    <div class="success">
+        This weekly promotion ends on Sunday 6:59 PM CST of Week {{=it.week}} {{=it.year}}. 
+    </div>
+    <hr>
+    <h3>Net Profit Leaders</h3>
+    <table class="leaders">
+        <thead>
+            <tr>
+                <td>
+                    Rank
+                </td>
+                <td>
+                    Player
+                </td>
+                 <td>
+                    Net Profit
+                </td>
+                <td>
+                    Prize
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+
+            {{~it.net_leaders :leader:index}}
+                <tr>
+                    <td>
+                        {{=leader.net_rank}}
+                    </td>
+                    <td>
+                        <a href="/user/{{=leader.username}}">{{=leader.username}}</a>
+                    </td>
+                    <td>
+                        {{#def.format: { n: leader.net_profit /Math.pow(10,6), decimals: 8 } }} CLAM
+                    </td>
+
+                        {{?leader.net_prize_amount > 0}}
+                        <td style="color:green;">
+                            {{#def.format: { n: leader.net_prize_amount /Math.pow(10,6), decimals: 8 } }} CLAM
+                        {{?? leader.pending_net_prize_amount > 0}}
+                        <td style="color:#CCCC00;">
+                             {{#def.format: { n: leader.pending_net_prize_amount /Math.pow(10,6), decimals: 8 } }} CLAM
+                        {{??}}
+                        <td>    -
+                        {{?}}
+                    </td>
+                </tr>
+            {{~}}
+
+        </tbody>
+    </table>
+    <hr>
+    <h3>Wagered Leaders</h3>
+    <table class="leaders">
+        <thead>
+            <tr>
+                <td>
+                    Rank
+                </td>
+                <td>
+                    Player
+                </td>
+                <td>
+                    Wagered
+                </td>
+                <td>
+                    Prize
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+
+            {{~it.wagered_leaders :leader:index}}
+                <tr>
+                    <td>
+                        {{=leader.wagered_rank}}
+                    </td>
+                    <td>
+                        <a href="/user/{{=leader.username}}">{{=leader.username}}</a>
+                    </td>
+                    <td>
+                        {{#def.format: { n: leader.wagered /Math.pow(10,6), decimals: 8 } }} CLAM
+                    </td>
+                        {{?leader.wagered_prize_amount > 0}}
+                         <td style="color:green;">
+                            {{#def.format: { n: leader.wagered_prize_amount /Math.pow(10,6), decimals: 8 } }} CLAM
+                        {{?? leader.pending_wagered_prize_amount > 0}}
+                         <td style="color:#CCCC00;">
+                             {{#def.format: { n: leader.pending_wagered_prize_amount /Math.pow(10,6), decimals: 8 } }} CLAM
+                        {{??}}
+                            <td> -
+                        {{?}}
+                    </td>
+                </tr>
+            {{~}}
+
+        </tbody>
+
+    </table>
+</div>
+#}}
+
+{{#def.include('./template/main')}}

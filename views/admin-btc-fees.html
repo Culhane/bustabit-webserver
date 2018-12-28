@@ -1,0 +1,123 @@
+{{##def.page_title = 'Admin - Claimed Btc Fees' #}}
+{{##def.content:
+<style>
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey; 
+    border-radius: 10px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: lightgrey; 
+    border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #b30000; 
+}
+</style>
+<div class="content row panel radius">
+
+    <div class="settings">
+        <div class="small-2 columns">
+            <h5><b>Admin Panel</b></h5>
+            <ul class="menu">
+                <li>
+                    <a href="/admin">Overview</a>
+                </li>
+                <li  >
+                  <a href="/admin/commissions?p=1">Commissions </a>
+                </li>
+                <li>
+                  <a href="/admin/weeklycommissions">Weekly</a>
+                </li>
+                <li >
+                    <a href="/admin/recentdeposits">Deposits</a>
+                </li>
+                <li>
+                    <a href="/admin/recentwithdraws">Withdraws</a>
+                </li>
+                <li>
+                    Btc Fees
+                </li>
+            </ul>
+        </div>
+
+        <div class="small-10 columns sets-content">
+                <hr>
+                <h4>Total Btc Earned From Withdraws: {{#def.format: {n: it.claimedTotal, decimals: 8 } }} BTC</h4>
+                <hr>
+
+                {{?it.entries.length > 0}}
+                    <table>
+                        <thead>
+                            <tr>
+                                <td>User Id</td>
+                                <td>Claimed Fee</td>
+                                <td>Withdraw Amount</td>
+                                <td>Withdraw Address</td>
+                                <td>Txid</td>
+                                <td>Completed</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {{~it.entries :claimed:index}}
+                            <tr>
+                                <td>{{=claimed.user_id}}</td>
+                                <td>{{#def.format: {n: claimed.claimed_amount, decimals: 8 } }}</td>
+                                <td>{{#def.format: {n: -(claimed.amount), decimals: 8 } }}</td>
+                                <td>{{=claimed.address }}</td>
+                                <td><a href="https://blockchain.info/tx/{{=claimed.txid}}">{{=claimed.txid }}</a></td>
+                                <td>{{=claimed.completed }}</td>
+                            </tr>
+                        {{~}}
+                        </tbody>
+                    </table>
+                {{??}}
+                <br>
+                <br>
+                <br>
+                <p>No Btc fees have been recivied <strong>yet</strong>.</p>
+                {{?}}
+        </div>
+    </div>
+    </div>
+#}}
+{{#def.include('./template/main')}}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

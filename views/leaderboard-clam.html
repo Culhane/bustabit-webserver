@@ -1,0 +1,62 @@
+{{##def.page_title = 'FreeBitcoins.com - BlastOFF All-time Clamcoin ePeen Champs' #}}
+{{##def.page_description = 'This page is our all-time hall of fame Blast Off players for Clamcoin (CLAM). Keywords: cards, bingo, Baccarat, monopoly, roulette, blackjack, craps, slots, bj' #}}
+
+{{##def.content:
+<div class="content row panel radius">
+    <a href="/leaderboard/btc" class="button orange">Bitcoin All Time</a>
+    <a href="/weekly-leaderboard/btc" class="button orange">Bitcoin Weekly</a>
+    <a href="/leaderboard/clam" class="button green">Clamcoin All Time</a>
+    <a href="/weekly-leaderboard/clam" class="button orange">Clamcoin Weekly</a>
+
+    <h5 id="top">Top 100 players</h5>
+    <hr>
+<table class="leaders">
+        <thead>
+            <tr>
+                <td>
+                    Rank
+                </td>
+                <td>
+                    Player
+                </td>
+                <td class="ldb-wagered">
+                    {{?it.sortBy != 'wagered'}}<a href="/leaderboard/clam?by=wagered_desc"><i class="fa fa-sort-down"></i></a>{{?}} Wagered
+                </td>
+                <td class="ldb-gross">
+                    {{?it.sortBy != 'gross_profit'}}<a href="/leaderboard/clam?by=gross_profit"><i class="fa fa-sort-down"></i></a>{{?}} Gross Profit <strong><a href="/faq#gross-profit">?</a></strong>
+                </td>
+                <td class="ldb-net">
+                    {{?it.sortBy != 'net_profit' || it.order != 'DESC' }}<a href="/leaderboard/clam?by=net_desc"><i class="fa fa-sort-down"></i></a>{{?}} Net Profit {{?it.sortBy != 'net_profit' || it.order != 'ASC' }}<a href="/leaderboard/clam?by=net_asc"><i class="fa fa-sort-up"></i></a>{{?}}
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+
+            {{~it.leaders :leader:index}}
+                <tr>
+                    <td>
+                        {{=leader.rank}}
+                    </td>
+                    <td>
+                        <a href="/user/{{=leader.username}}">{{=leader.username}}</a>
+                    </td>
+                    <td>
+                        {{#def.format: { n: leader.wagered / Math.pow(10,6), decimals: 8 } }} CLAM
+                    </td>
+                    <td>
+                        {{#def.format: { n: leader.gross_profit / Math.pow(10,6), decimals: 8 } }} CLAM
+                    </td>
+                    <td>
+                        {{#def.format: { n: leader.net_profit / Math.pow(10,6) , decimals: 8 } }} CLAM
+                    </td>
+                </tr>
+            {{~}}
+
+        </tbody>
+    </table>
+
+    {{?it.leaders.length > 20 }}<div class="border-button red right" onclick="#top"></div>{{?}}
+</div>
+#}}
+
+{{#def.include('./template/main')}}

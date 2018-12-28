@@ -1,8 +1,6 @@
 var assert = require('better-assert');
-var bitcoinjs = require('bitcoinjs-lib');
 var crypto = require('crypto');
 var config = require('../config/config');
-
 var encKey = config.ENC_KEY;
 
 exports.encrypt = function (text) {
@@ -36,7 +34,7 @@ exports.isInvalidUsername = function(input) {
     if (input.length === 0) return 'NOT_PROVIDED';
     if (input.length < 3) return 'TOO_SHORT';
     if (input.length > 50) return 'TOO_LONG';
-    if (!/^[a-z0-9_\-]*$/i.test(input)) return 'INVALID_CHARS';
+    if (!/^[a-z0-9]*$/i.test(input)) return 'INVALID_CHARS';
     if (input === '__proto__') return 'INVALID_CHARS';
     return false;
 };
@@ -61,35 +59,12 @@ exports.isUUIDv4 = function(uuid) {
     return (typeof uuid === 'string') && uuid.match(/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i);
 };
 
-exports.isEligibleForGiveAway = function(lastGiveAway) {
-    if (!lastGiveAway)
-        return true;
-
-    var created = new Date(lastGiveAway);
-    var timeElapsed = (new Date().getTime() - created.getTime()) / 60000; //minutes elapsed since last giveaway
-
-    if (timeElapsed > 60)
-        return true;
-
-    return Math.round(60 - timeElapsed);
-};
-
-var derivedPubKey = config.BIP32_DERIVED;
-if (!derivedPubKey)
-    throw new Error('Must set env var BIP32_DERIVED_KEY');
-
-
-var hdNode = bitcoinjs.HDNode.fromBase58(derivedPubKey);
-
-exports.deriveAddress = function(index) {
-    return hdNode.derive(index).pubKey.getAddress().toString();
-};
 
 exports.formatSatoshis = function(n, decimals) {
     if (typeof decimals === 'undefined')
-        decimals = 2;
+        decimals = 6;
 
-    return (n/100).toFixed(decimals).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+    return (n/Math.pow(10, 8)).toFixed(decimals).toString().replace(/(\d)(?=(\d{6})+(?!\d))/g, "$1,");
 };
 
 exports.isInt = function isInteger (nVal) {

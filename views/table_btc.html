@@ -1,0 +1,130 @@
+{{##def.format:param:{{=(param.n/Math.pow(10,8)).toFixed(param.decimals).toString().replace(/(\d)(?:(?=\d+(?=[^\d.]))(?=(?:[0-9]{3})+\b)|(?=\d+(?=\.))(?=(?:[0-9]{3})+(?=\.)))/g, "$1,")}}#}}
+
+<!DOCTYPE html>
+<html>
+    <head>
+    <title>FreeBitcoins.com - Bitcoin & Altcoin Casino & Arcade Games</title>
+    <link rel="shortcut icon" href="/client_btc/img/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="https://games.freebitcoins.com/client_btc/img/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+    <meta charset="utf-8" />
+    <meta name="description" content="Bitcoin Blast OFF is our first in-house game. Play the game or be the house.  Join us while we ride the Rocket.  Just don't be on the Rocket when she blows up!" /> 
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {{?it.table}}
+        <link rel="stylesheet" href="/client_btc/css/game.css" />
+    {{??}}
+        <link rel="stylesheet" href="/client_btc/css/app.css" />
+    {{?}}
+    <script type="text/javascript" src="https://games.freebitcoins.com/lib/foundation/js/vendor/modernizr.js"></script>
+</head>
+<body>
+<div class="wrap">
+{{#def.include('template/header')}}
+
+    <div class="content">
+        <div id="space-wrap" class="space-wrap">
+          <div class="ufo"></div>
+          <div class="ufo2"></div>
+          <div class="earth"></div>
+          <div class="space-gradient"></div>
+          <div class="space-container-wrap">
+            <div class="space-container"></div>
+          </div>
+        </div>
+          <div class="top-bar-header">
+                             <div class="container">
+                        <div class="balance"> Invested:&nbsp;</div>
+                        <div class="invest">
+                          <a href="/account">
+                              <span id="site_balance_invested" class="amount">0.00000000 BTC</span>
+                          </a></div>
+                        <div class="invest">
+                          <a href="/invest">
+                              <span id="user_balance_invested" class="amount">0.00000000 BTC</span>
+                          </a></div>
+                    </div>
+
+                    <div class="container2">
+                        <div class="balance"> Profit:&nbsp; </div>
+                        <div class="invest">
+                          <a href="/invest">
+                              <span id="site_profit_amount" class="amount">0.00000000 BTC</span>
+                          </a></div>
+
+                           <div class="otheropt">
+                          <a href="/invest">
+                              <span id="user_profit" class="amount">0.00000000 BTC</span>
+                          </a></div>
+                  </div>
+
+                    <div class="container3">
+                        <div class="balance"> Wagered:&nbsp;</div>
+                        <div class="invest">
+                          <a href="/account">
+                              <span id="site_wagered" class="amount">0.00000000 BTC</span>
+                          </a></div>
+                        <div class="invest">
+                          <a href="/invest">
+                              <span id="user_wagered" class="amount">0.00000000 BTC</span>
+                          </a></div>
+                    </div>
+
+                    <div class="container4">
+                        <div class="balance"> Profit:&nbsp;</div>
+                        <div class="invest">
+                          <a href="/account">
+                              <span id="site_profit_percentage" class="amount">0.000000%</span>
+                          </a></div>
+                        <div class="invest">
+                          <a href="/invest">
+                              <span id="user_investment_profit" class="amount">0.00000000 BTC</span>
+                          </a></div>
+                    </div>
+
+                  <div class="container5"  id="headerText" >
+                        <div class="balance">&nbsp; </div>
+                        <div class="invest">&nbsp;
+                        <span class="amount">Site:</span>
+                        </div>
+                         <div class="otheropt">
+                              <span class="amount">&nbsp;Me:</span>
+                        </div>
+                  </div>
+            </div>
+
+              <script type="text/javascript">
+                  function init() {
+                       document.getElementById('play_link_btc').style.visibility='hidden';
+
+                      if(isMobile.any()){
+                          document.getElementById('headerText').style.visibility='hidden';
+                      }
+                  }
+                  window.onload = init;
+              </script>
+
+              <div id="game" class="wrapper">
+                  <div class="loading">Game Loading...</div>
+              </div>
+              <!--Global vars-->
+              <script>
+                  // TODO:
+                  //  var OTT =  {{=it.ott}};
+              </script>
+              <!--RequireJs-->
+              <script data-main="../client_btc/scripts/main" src="../scripts/lib/require.js"></script>
+    </div>
+
+
+    <script type="text/javascript" src="https://games.freebitcoins.com/lib/foundation/js/vendor/jquery.js"></script>
+    <script type="text/javascript" src="https://games.freebitcoins.com/lib/foundation/js/vendor/modernizr.js"></script>
+    <script type="text/javascript" src="https://games.freebitcoins.com/lib/foundation/js/foundation.min.js"></script>
+    <script type="text/javascript">$(document).foundation();</script>
+
+
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,73 @@
+{{##def.format:param:{{=(param.n/Math.pow(10,8)).toFixed(param.decimals).toString().replace(/(\d)(?:(?=\d+(?=[^\d.]))(?=(?:[0-9]{3})+\b)|(?=\d+(?=\.))(?=(?:[0-9]{3})+(?=\.)))/g, "$1,")}}#}}
+
+<!DOCTYPE html>
+<html>
+    {{#def.include('head')}}
+<body>
+<div class="wrap">
+    {{#def.include('header')}}
+
+    {{? it.warning }}
+        <div class="warning">{{!it.warning}}</div>
+    {{?? it.success}}
+        <div class="success">{{!it.success}}</div>
+    {{??it.user }}
+
+        {{?it.user.error}}
+
+            <div class="warning">
+                {{!it.user.error}}
+            </div>
+        {{??it.user.advice == 'new'}}
+        <div class="success">
+            Welcome to Blast Off (freebitcoins.com) you can just watch the current games / chat or bet... have fun :D
+
+        </div>
+        {{??it.user.advice == 'received'}}
+
+        {{?? it.user.advice}}
+        <div class="success">
+           {{!it.user.advice}}
+        </div>
+        {{?}}
+
+  
+
+    {{?}}
+
+    <div class="content">
+        <div id="space-wrap" class="space-wrap">
+          <div class="ufo"></div>
+          <div class="ufo2"></div>
+          <div class="earth"></div>
+          <div class="space-gradient"></div>
+          <div class="space-container-wrap">
+            <div class="space-container"></div>
+          </div>
+        </div>
+        {{#def.content || ""}}
+    </div>
+
+
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-55876877-18%22%3E"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-55876877-18');
+    </script>
+
+    <script type="text/javascript" src="https://freebitcoins.com/lib/foundation/js/vendor/jquery.js"></script>
+    <script type="text/javascript" src="https://freebitcoins.com/lib/foundation/js/vendor/modernizr.js"></script>
+    <script type="text/javascript" src="https://freebitcoins.com/lib/foundation/js/foundation.min.js"></script>
+    <script type="text/javascript">$(document).foundation();</script>
+
+
+
+</div>
+
+</body>
+</html>

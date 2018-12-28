@@ -1,70 +1,71 @@
-{{##def.page_title = 'User Stats' #}}
+{{##def.page_title = 'FreeBitcoins.com - BlastOFF {{=it.stats.username}} - Stats' #}}
+{{##def.page_description = 'Free Bitcoins information, stats, and charts for {{=it.stats.username}}' #}}
 
 {{##def.content:
-    <div class="content row panel radius">
-        <h4>Player:
-            {{?it.user && it.stats.username == it.user.username}}
-                <strong>
-                    <a href="/account">{{=it.stats.username }}</a>
-                </strong>
-            {{??}}
-               <strong> <b>{{=it.stats.username}}</b></strong>
-            {{?}}
-        </h4>
-        <div id="statistics" class="row">
-            <div class="columns data large-3">
-                <p><b>Games Played </b></p>
-                <h5>{{=it.stats.games_played}}</h5>
-            </div>
-            <div class="rank columns data large-3">
-                <a href="/leaderboard">
-                    <p><b>Rank </b></p>
-                    <h5>{{=it.stats.rank}}</h5>
-                </a>
-            </div>
-            <div class="columns data large-3">
-                <p>
-                    <b>Gross Profit </b>
-                        <strong><a href="/faq#gross-profit">?</a></strong>
-                </p>
-                <h5>{{#def.format: { n: it.stats.gross_profit, decimals: 2} }} bits</h5>
-            </div>
-            <div class="columns data large-3">
-                <p>
-                    <b>Net Profit</b>
-                </p>
-                <h5>{{#def.format: { n: it.stats.net_profit, decimals: 2} }} bits</h5>
-            </div>
-        </div>
-        <hr>
-        {{? it.showing_last}}
-            <h4>Showing game {{= it.games_from}} to {{= it.games_to}}</h4>
+    
+<div class="content row panel radius">
+    <a class="button orange float-right" href="/user/{{=it.stats.username }}/clam">Clam Charts</a>&nbsp;
+    <a class="button orange float-right" href="/user/{{=it.stats.username }}/btc">Btc Charts</a>
+    <h4>Player:
+        {{?it.user && it.stats.username == it.user.username}}
+            <strong>
+                <a href="/account">({{=it.stats.user_id }}) {{=it.stats.username }}</a>
+            </strong>
         {{??}}
-            <h4>Showing last {{= it.games_to - it.games_from + 1}} games</h4>
+           <strong> <b>({{=it.stats.user_id }}) {{=it.stats.username}}</b></strong>
         {{?}}
+    </h4> 
+    
 
-
-        <div id="chartdiv" style="width: 100%; height: 400px;"></div>
-
-
-        {{? it.previous_page }}
-        <a href="?p=1">First</a>
-        <a href="{{= it.previous_page }}">Previous</a>
-        {{?}}
-
-        {{? it.next_page }}
-        <a href="{{= it.next_page }}">Next</a>
-        <a href="{{= it.stats.username }}">Last</a>
-        {{?}}
-
-
-        <script src="/vendor/amcharts/amcharts.js" type="text/javascript"></script>
-        <script src="/vendor/amcharts/serial.js" type="text/javascript"></script>
-        <script src="/vendor/amcharts/custom.js" type="text/javascript"></script>
-        <script>
-            CustomChart({{= it.games_from}}, {{= it.net_profit_offset}}, {{=JSON.stringify(it.plays)}});
-        </script>
-
+    <div id="statistics" class="row">
+        <div class="columns data large-3">
+            <p><b>Games Played Btc</b></p>
+            <h5>{{=it.stats.games_played_btc}}</h5>
+        </div>
+        <div class="rank columns data large-3">
+            <a href="/leaderboard">
+                <p><b>Rank Btc</b></p>
+                <h5>{{=it.stats.rank_btc}}</h5>
+            </a>
+        </div>
+        <div class="columns data large-3">
+            <p>
+                <b>Wagered Btc </b>
+            </p>
+            <h5>{{#def.format: { n: it.stats.user_wagered_btc, decimals: 8} }} BTC</h5>
+        </div>
+        <div class="columns data large-3">
+            <p>
+                <b>Profit Btc</b>
+            </p>
+            <h5>{{#def.format: { n: it.stats.net_profit_btc, decimals: 8} }} BTC</h5>
+        </div>
     </div>
+    <hr>
+    <div id="statistics" class="row">
+        <div class="columns data large-3">
+            <p><b>Games Played Clam</b></p>
+            <h5>{{=it.stats.games_played_clam}}</h5>
+        </div>
+        <div class="rank columns data large-3">
+            <a href="/leaderboard">
+                <p><b>Rank Clam</b></p>
+                <h5>{{=it.stats.rank_clam}}</h5>
+            </a>
+        </div>
+        <div class="columns data large-3">
+            <p>
+                <b>Wagered Clam </b>
+            </p>
+            <h5>{{#def.format: { n: it.stats.user_wagered_clam, decimals: 8} }} CLAM</h5>
+        </div>
+        <div class="columns data large-3">
+            <p>
+                <b>Profit Clam</b>
+            </p>
+            <h5>{{#def.format: { n: it.stats.net_profit_clam, decimals: 8} }} CLAM</h5>
+        </div>
+    </div>
+</div>
 #}}
-{{#def.include('./template/main_old')}}
+{{#def.include('./template/main')}}

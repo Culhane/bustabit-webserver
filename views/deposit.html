@@ -13,63 +13,102 @@
     <div class="content row panel radius">
         <div class="settings">
             <div class="small-2 columns">
-                <ul class="menu">
-                    <li>
-                        <a href="/account">Account</a>
-                    </li>
-                    <li>
-                        <a href="/security">Security</a>
-                    </li>
-                    <li class="active">
-                        Deposit
-                    </li>
-                    <li>
-                        <a href="/withdraw">Withdraw</a>
-                    </li>
+            <ul class="menu">
+                <li>
+                    <a href="/account">Account</a>
+                </li>
+                <li>
+                  <a href="/invest">Invest</a>
+                </li>
+                <li class="active">
+                    Deposit
+                </li>
+                <li >
+                    <a href="/withdraw">Withdraw</a>
+                </li>
+                <li>
+                    <a href="/tip">Tips</a>
+                </li>
+                <li>
+                    <a href="/weeklyprizes">Prizes</a>
+                </li>
+                <li >
+                     <a href="/support">Support</a>
+                </li>
+                 <li>
+                    <a href="/security">Security</a>
+                </li>
+                <li>
+                    <a onclick="logout();">
+                        Logout
+                    </a>
+                </li>
+            </ul>
+        </div>
 
-                    <li>
-                        <a href="support">Support</a>
-                    </li>
-                    <li>
-                        <a onclick="logout();">
-                            Logout
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            <div class="small-10 columns setts-content">
-                <h5 class="">Deposit History</h5>
+            <div class="small-10 columns sets-content">
+                <div class="row">
+                    <div class="small-6 columns">
+                        <div class="panel radius">
+                            <b>Btc Deposit Address:</b>
+                            <input type="text" value="{{=it.user.deposit_address_btc}}" readonly>
+
+                            <small>Minimum deposit is 0.0001 BTC, anything less will be ignored</small>
+                        </div>
+                    </div>
+                    <div class="small-6 columns">
+                        <div class="panel radius">
+                            <b>Clam Deposit Address:</b>
+                            <input type="text" value="{{=it.user.deposit_address_clam}}" readonly>
+
+                            <small>Minimum deposit is 0.0002 CLAM, anything less will be ignored</small>
+                        </div>
+                    </div>
+                </div>
+
+                <h5 class="center">Deposit History</h5>
                 <hr>
-                <p class="account">
-                    <b>Deposit Address:</b>
-                    <input type="text" value="{{=it.user.deposit_address}}" readonly>
-                    <a href="bitcoin:{{=it.user.deposit_address}}?message=deposit">Bitcoin link</a>
-                </p>
                 {{?it.user.deposits.length > 0}}
                     <table>
                         <thead>
                             <tr>
-                                <td>Bits</td>
+                                <td>Currency</td>
+                                <td>Amount</td>
                                 <td>Transaction</td>
+                                <td>Status</td>
                                 <td class="show-for-medium-up">Created</td>
                             </tr>
                         </thead>
                         <tbody>
                             {{~it.user.deposits :deposit:index}}
                                 <tr>
-                                    <td>{{#def.format: {n: deposit.amount, decimals: 2 } }}</td>
-                                    <td><a href="https://blockchain.info/tx/{{=deposit.txid}}" target="_blank">link</a></td>
+                                    <td>{{=deposit.coin}}</td>
+                                    <td><font color=green>{{#def.format: {n: deposit.amount, decimals: 8 } }}</font></td>
+                                    {{?deposit.coin === 'btc'}}
+                                         <td><a href="http://blockchain.info/tx/{{=deposit.txid}}" target="_blank">link</a></td>
+                                    {{??}}
+                                         <td><a href="http://khashier.com/tx/{{=deposit.txid}}" target="_blank">link</a></td>
+                                    {{?}}
+                                    {{?deposit.confirmed}}
+                                        <td >COMPLETED - {{=deposit.confirmed}}</td>
+                                    {{??}}
+                                        {{?deposit.coin === 'btc'}}
+                                             <td>PENDING ( {{=deposit.confirmations}} OF 1 )</td>
+                                        {{??}}
+                                             <td>PENDING ( {{=deposit.confirmations}} OF 10 )</td>
+                                        {{?}}
+                                    {{?}}
                                     <td class="show-for-medium-up">{{=deposit.created}}</td>
                                 </tr>
                             {{~}}
                         </tbody>
                     </table>
                 {{??}}
-                    <p>You don't have deposits</p>
+                    <p>You don't have any deposits <b>yet</b>, once you deposit your transaction history will appear here.</p>
                 {{?}}
-
+      
             </div>
         </div>
     </div>
 #}}
-{{#def.include('./template/main_old')}}
+{{#def.include('./template/main')}}

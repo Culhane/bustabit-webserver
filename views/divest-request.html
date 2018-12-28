@@ -1,0 +1,88 @@
+{{##def.page_title = 'Divest Request' #}}
+
+{{##def.content:
+<form action="/logout" method="post" id='logout'></form>
+<div class="content row panel radius">
+    <div class="settings">
+        <div class="small-2 columns">
+            <ul class="menu">
+                <li>
+                    <a href="/account">Account</a>
+                </li>
+                <li class="active">
+                   <a href="/invest">Invest</a>
+                </li>
+                <li>
+                    <a href="/deposit">Deposit</a>
+                </li>
+                <li>
+                    <a href="/withdraw">Withdraw</a>
+                </li>
+                <li>
+                    <a href="/tip">Tips</a>
+                </li>
+                <li>
+                    <a href="/support">Support</a>
+                </li>
+                 <li>
+                    <a href="/security">Security</a>
+                </li>
+                <li>
+                    <a onclick="logout();">
+                        Logout
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="small-10 columns sets-content">
+            <br/>
+            <h2><b>Divestment Request</b></h2>
+            <br/>
+            <div class="row"> 
+                <div class="small-6 column">
+                    <h4>BTC Invested Balance: {{#def.format: {n: it.user.balance_satoshis_invested_btc, decimals: 8 } }}</h4>
+                </div>
+                <div class="small-6 column">
+                    <h4>CLAM Invested Balance: {{#def.format: {n: it.user.balance_satoshis_invested_clam, decimals: 8 } }}</h4>
+                </div>
+            </div>
+            <br/>
+            <form action="/divest-request" method="post">
+                <!-- fake fields are a workaround for chrome autofill getting the wrong fields -->
+                <input style="display:none" type="text" name="fakeusernameremembered"/>
+                <input style="display:none" type="password" name="fakepasswordremembered"/>
+
+                <div class="row"> 
+                <div class="small-8 column">
+                    <label for="amount">Amount</label>
+                    <input type="text" id="amount" name="amount" />
+                </div>
+                <div class="small-4 column">
+                    <label for="amount">Divest All Coins</label>
+                    <input type="checkbox" id="setall" name="setall" style="width:35px; height:35px;"/>
+                </div>
+                </div>
+
+                <label for="coin">Currency </label>
+                <select name="coin" id="coin">
+                  <option value="btc">Bitcoin</option>
+                  <option value="clam">Clamcoin</option>
+                </select>
+
+                <label for="password">Your password</label>
+                <input type="password" id="password" name="password" autocomplete="off"/>
+                {{?it.user.mfa_secret}}
+                    <label for="otp">2FA Code</label>
+                    <input type="text" id="otp" name="otp" autocomplete="off" pattern="[0-9]{6}" required />
+                {{?}}
+                <a href="/invest" class="border-button ">Back</a>
+                <input class="border-button right blue" type="submit"/>
+                <input type="hidden" name="divest-id" value="{{= it.id}}" />
+            </form>
+        </div>
+    </div>
+</div>
+#}}
+
+{{#def.include('./template/main')}}

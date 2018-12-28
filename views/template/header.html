@@ -1,0 +1,113 @@
+<script type="text/javascript">
+function logout() {
+    if (document.getElementById('logout')) {
+        if (confirm("Are you sure you want to log out?")) {
+            document.getElementById("logout").submit();
+        }
+    }
+};
+
+var isMobile = {
+    Android: function() {
+        return navigator.userAgent.match(/Android/i);
+    },
+    BlackBerry: function() {
+        return navigator.userAgent.match(/BlackBerry/i);
+    },
+    iOS: function() {
+        return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+    },
+    Opera: function() {
+        return navigator.userAgent.match(/Opera Mini/i);
+    },
+    Windows: function() {
+        return navigator.userAgent.match(/IEMobile/i) || navigator.userAgent.match(/WPDesktop/i);
+    },
+    any: function() {
+        return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+    }
+};
+
+</script>
+<header>
+    <div class="adblock" ><p>Our <a href="https://swap.freebitcoins.com">exchange</a> is now OPEN! For other games and 100+ cryptocurrencies check out <a href="https://luckygames.co" target="_blank">Luckygames.co</a>.</p></div>
+
+    <form action="/logout" method="post" id='logout'></form>
+    <nav class="top-bar" data-topbar role="navigation">
+        <ul class="title-area">
+            <li class="name">
+                <h1><a href="https://freebitcoins.com" >FreeBitcoins.com</a></h1>
+                
+            </li>
+            <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
+            <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+        </ul>
+        <!--<ul class="title-area">-->
+        <!--    <li class="name">-->
+        <!--        -->
+        <!--        <h1><a style="color:green;" href="https://freebitcoins.com" target="_blank">/BlastOff</a></h1>-->
+        <!--    </li>-->
+        <!--</ul>-->
+        <section class="top-bar-section">
+            <ul class="right">
+
+               <li><a href="/blastoff/btc" class="moon-button button green" id="play_link_btc">Play Btc</a></li>
+               <li>&nbsp;&nbsp;&nbsp;</li>
+               <li><a href="/blastoff/clam" class="moon-button button green" id="play_link_clam">Play Clam</a></li>
+               <li>&nbsp;&nbsp;&nbsp;</li>
+
+               <li><a href=""></a></li>
+
+                {{?it.user}}
+
+                <div class="balancesBtc header-el show-for-large-up">
+                    Balance:&nbsp;
+                    <a href="/account">
+                        <span id="user_balance_bits_btc" class="amount">{{#def.format:{n: it.user.balance_satoshis_btc, decimals:8} }}</span>
+                    </a>
+                </div>
+
+                 <div class="balances header-el show-for-large-up">
+                    Balance:&nbsp;
+                    <a href="/account">
+                        <span id="user_balance_bits_clam" class="amount">{{#def.format:{n: it.user.balance_satoshis_clam, decimals:8} }}</span>
+                    </a>
+                </div>
+                <li class="hide-for-large-up">
+                    <a href="/account">
+                        <span>Btc Balance: {{#def.format:{n: it.user.balance_satoshis_btc, decimals:8} }}</span>
+                      </a>
+                </li>
+                  <li class="hide-for-large-up">
+                    <a href="/account">
+                        <span>Clam Balance: {{#def.format:{n: it.user.balance_satoshis_clam, decimals:8} }}</span>
+                      </a>
+                </li>
+
+                <li class="has-dropdown">
+                    <a href="#">{{=it.user.username}}</a>
+                    <ul class="dropdown">
+                        <li><a href="/account" target="_blank">Account</a></li>
+                        <li><a href="/invest" target="_blank">Invest</a></li>
+                        <li><a href="/deposit" target="_blank">Deposit</a></li>
+                        <li><a href="/withdraw" target="_blank">Withdraw</a></li>
+                        <li><a href="/support" target="_blank">Support</a></li>
+                        <li><a href="/faq" target="_blank">FAQ</a></li>
+                        <li><a href="/leaderboard" target="_blank">Leaderboards</a></li>
+                        <li><a href="/user/{{=it.user.username}}" target="_blank">Game Charts</a></li>
+                        <li><a href="#" onclick="logout();">Logout</a></li>
+                    </ul>
+                </li>
+                {{??}}
+                <li class="menu-action"><a href="/register" class="moon-button button green">Register</a></li>
+                <li class="menu-action"><a href="/login" class="moon-button button grey">Login</a></li>
+                {{?}}
+            </ul>
+
+
+
+        </section>
+
+    </nav>
+</header>
+        

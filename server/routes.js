@@ -8,7 +8,7 @@ var sendEmail = require('./sendEmail');
 var stats = require('./stats');
 var config = require('../config/config');
 var recaptchaValidator = require('recaptcha-validator');
-
+var logger = require('winston');
 
 var production = process.env.NODE_ENV === 'production';
 
@@ -26,7 +26,7 @@ function staticPageLogged(page, loggedGoTo) {
         });
     }
 }
- 
+
 function contact(origin) {
     assert(typeof origin == 'string');
 
@@ -84,45 +84,55 @@ function adminRestrict(req, res, next) {
 }
 
 function recaptchaRestrict(req, res, next) {
-  var recaptcha = lib.removeNullsAndTrim(req.body['g-recaptcha-response']);
-  if (!recaptcha) {
-    return res.send('No recaptcha submitted, go back and try again');
-  }
+    var recaptcha = lib.removeNullsAndTrim(req.body['g-recaptcha-response']);
 
-  recaptchaValidator.callback(config.RECAPTCHA_PRIV_KEY, recaptcha, req.ip, function(err) {
-    if (err) {
-      if (typeof err === 'string')
-        res.send('Got recaptcha error: ' + err + ' please go back and try again');
-      else {
-        console.error('[INTERNAL_ERROR] Recaptcha failure: ', err);
-        res.render('error');
-      }
-      return;
+    if (!config.PRODUCTION && !recaptcha) {
+        logger.info('Skipping recaptcha check, for dev');
+        next();
+        return;
     }
 
-    next();
-  });
+    if (!recaptcha)
+        return res.send('No recaptcha submitted, go back and try again');
+
+    var ip = req.headers['x-real-ip'] || req.ip
+    recaptchaValidator.callback(config.RECAPTCHA_PRIV_KEY, recaptcha, ip, function (err) {
+        if (err) {
+            if (typeof err === 'string')
+                res.send('Got recaptcha error: ' + err + ' please go back and try again');
+            else {
+                logger.error('[INTERNAL_ERROR] Recaptcha failure: %s', err);
+                res.render('error');
+            }
+            return;
+        }
+
+        next();
+    });
 }
 
 
-function table() {
-    return function(req, res) {
-        res.render('table_old', {
-            user: req.user,
-            table: true
-        });
-    }
-}
 
-function tableNew() {
+function tableClam() {
     return function(req, res) {
-        res.render('table_new', {
+        res.render('table_clam', {
             user: req.user,
             buildConfig: config.BUILD,
             table: true
         });
     }
 }
+
+function tableBtc() {
+    return function(req, res) {
+        res.render('table_btc', {
+            user: req.user,
+            buildConfig: config.BUILD,
+            table: true
+        });
+    }
+}
+
 
 function tableDev() {
     return function(req, res) {
@@ -137,10 +147,11 @@ function tableDev() {
         });
     }
 }
+
 function requestDevOtt(id, callback) {
     var curl = require('curlrequest');
     var options = {
-        url: 'https://www.bustabit.com/ott',
+        url: 'https://games.freebitcoins.com/ott',
         include: true ,
         method: 'POST',
         'cookie': 'id='+id
@@ -152,7 +163,7 @@ function requestDevOtt(id, callback) {
         var data = parts.pop()
             , head = parts.pop();
         ott = data.trim();
-        console.log('DEV OTT: ', ott);
+        //logger.info('DEV OTT: %s', ott);
         callback(ott);
     });
 }
@@ -160,13 +171,17 @@ function requestDevOtt(id, callback) {
 module.exports = function(app) {
 
     app.get('/', staticPageLogged('index'));
-    app.get('/register', staticPageLogged('register', '/play'));
-    app.get('/login', staticPageLogged('login', '/play'));
+    app.get('/register', staticPageLogged('register', '/blastoff/btc'));
+    app.get('/login', staticPageLogged('login', '/blastoff/btc'));
     app.get('/reset/:recoverId', user.validateResetPassword);
     app.get('/faq', staticPageLogged('faq'));
     app.get('/contact', staticPageLogged('contact'));
-    app.get('/request', restrict, user.request);
+
     app.get('/deposit', restrict, user.deposit);
+    app.get('/invest', restrict, user.invest);
+    app.get('/invest.json', restrict, user.investJson);
+    app.get('/investrequest', restrict, user.investRequest);
+    app.get('/divestrequest', restrict, user.divestRequest);
     app.get('/withdraw', restrict, user.withdraw);
     app.get('/withdraw/request', restrict, user.withdrawRequest);
     app.get('/support', restrict, user.contact);
@@ -176,53 +191,84 @@ module.exports = function(app) {
     app.get('/calculator', staticPageLogged('calculator'));
     app.get('/guide', staticPageLogged('guide'));
 
+    app.get('/tip', restrict, user.tip);
+    //app.get('/livestats', restrict, user.getLiveStats);
+    //app.get('/togglestakeonly', restrict, user.stakeonly);
 
-    app.get('/play-old', table());
-    app.get('/play', tableNew());
-    app.get('/play-id/:id', tableDev());
 
-    app.get('/leaderboard', games.getLeaderBoard);
-    app.get('/game/:id', games.show);
+    app.get('/blastoff/clam', tableClam());
+    app.get('/blastoff/btc', tableBtc());
+
+    // indexes
+    app.get('/weeklyprizes', restrict, user.weeklyPrizes);
+    app.get('/leaderboard', games.leaderboardIndex);
+    app.get('/weekly-leaderboard', games.weeklyLeaderboardIndex);
+    //prizes and leaderboards
+    //app.get('/weeklyprizes/clam', restrict, user.weeklyPrizesClam);
+    //app.get('/weeklyprizes/btc', restrict, user.weeklyPrizesClam);
+    app.get('/leaderboard/clam', games.getLeaderBoardClam);
+    app.get('/leaderboard/btc', games.getLeaderBoardBtc);
+    app.get('/weekly-leaderboard/clam', games.getWeeklyLeaderBoardClam);
+    app.get('/weekly-leaderboard/btc', games.getWeeklyLeaderBoardBtc);
+    //games info
+    app.get('/game/clam/:id.json', games.getGameInfoJsonClam);
+    app.get('/game/clam/:id', games.showClam);
+    app.get('/game/btc/:id.json', games.getGameInfoJsonBtc);
+    app.get('/game/btc/:id', games.showBtc);
+
     app.get('/user/:name', user.profile);
-
+    app.get('/user/:name/:coin', user.profile);
     app.get('/error', function(req, res, next) { // Sometimes we redirect people to /error
       return res.render('error');
     });
 
-    app.post('/request', restrict, recaptchaRestrict, user.giveawayRequest);
     app.post('/sent-reset', user.resetPasswordRecovery);
     app.post('/sent-recover', recaptchaRestrict, user.sendPasswordRecover);
     app.post('/reset-password', restrict, user.resetPassword);
     app.post('/edit-email', restrict, user.editEmail);
     app.post('/enable-2fa', restrict, user.enableMfa);
     app.post('/disable-2fa', restrict, user.disableMfa);
+
+
+    app.post('/invest-request', restrict, user.handleInvestRequest);
+    app.post('/divest-request', restrict, user.handleDivestRequest);
     app.post('/withdraw-request', restrict, user.handleWithdrawRequest);
+    
+
     app.post('/support', restrict, contact('support'));
     app.post('/contact', contact('contact'));
     app.post('/logout', restrictRedirectToHome, user.logout);
     app.post('/login', recaptchaRestrict, user.login);
     app.post('/register', recaptchaRestrict, user.register);
+   // app.get('/togglestakeonly', restrict, user.togglestakeonly);
 
     app.post('/ott', restrict, function(req, res, next) {
         var user = req.user;
-        var ipAddress = req.ip;
+        var ipAddress = req.headers['x-real-ip'] || req.ip;
         var userAgent = req.get('user-agent');
         assert(user);
         database.createOneTimeToken(user.id, ipAddress, userAgent, function(err, token) {
             if (err) {
-                console.error('[INTERNAL_ERROR] unable to get OTT got ' + err);
+                logger.error('[INTERNAL_ERROR] unable to get OTT got %s' + err);
                 res.status(500);
                 return res.send('Server internal error');
             }
             res.send(token);
         });
     });
-    app.get('/stats', stats.index);
 
+    app.get('/stats', stats.index);
+    app.get('/terms-conditions', staticPageLogged('terms'));
 
     // Admin stuff
-    app.get('/admin-giveaway', adminRestrict, admin.giveAway);
-    app.post('/admin-giveaway', adminRestrict, admin.giveAwayHandle);
+    app.get('/admin', adminRestrict, admin.index);
+    app.get('/admin/weeklycommissions', adminRestrict, admin.weeklycommissions);
+    app.get('/admin/recentdeposits', adminRestrict, admin.recentdeposits);
+    app.get('/admin/recentwithdraws', adminRestrict, admin.recentwithdraws);
+    app.get('/admin/commissions', adminRestrict, admin.commissions);
+    app.get('/admin/btcfees', adminRestrict, admin.btcfees);
+    //app.get('/admin/prizes', adminRestrict, admin.prizes);
+    //app.post('/admin', adminRestrict, admin.post);
 
     app.get('*', function(req, res) {
         res.status(404);

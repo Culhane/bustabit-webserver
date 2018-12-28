@@ -1,7 +1,10 @@
+#!/usr/bin/env node
+
 var fs = require('fs');
 
 var express = require('express');
 var http = require('http');
+var https = require('https');
 var assert = require('assert');
 var compression = require('compression');
 var path = require('path');
@@ -16,10 +19,16 @@ var app = express();
 var config = require('../config/config');
 var routes = require('./routes');
 var database = require('./database');
-var Chat = require('./chat');
+//var Chat = require('./chat');
 var lib = require('./lib');
 
-debug('booting bustabit webserver');
+var winston = require('winston');
+
+var logger =  winston.add(winston.transports.File, { filename: '/home/user/logs/webserver-info.log', level: 'info', handleExceptions: true, name: 'info-file' })
+                //.remove(winston.transports.Console);
+
+
+debug('booting blastoff webserver');
 
 /** TimeAgo Settings:
  * Simplify and de-verbosify timeago output.
@@ -39,6 +48,11 @@ var timeago_strings = _.extend(timeago.settings.strings, {
   years: '%d years'
 });
 timeago.settings.strings = timeago_strings;
+
+var options = {
+  key: fs.readFileSync(config.HTTPS_KEY),
+  cert: fs.readFileSync(config.HTTPS_CERT)
+}; 
 
 
 /** Render Engine
@@ -81,16 +95,16 @@ app.set("view engine", "html");
 app.disable('x-powered-by');
 app.enable('trust proxy');
 
-
+   
 /** Serve Static content **/
 var twoWeeksInSeconds = 1209600;
-if(config.PRODUCTION) {
-    app.use(express.static(path.join(__dirname, '../build'), { maxAge: twoWeeksInSeconds * 1000 }));
-} else {
-    app.use(express.static(path.join(__dirname, '../client_new'), { maxAge: twoWeeksInSeconds * 1000 }));
-    app.use('/client_old', express.static(path.join(__dirname, '../client_old'), { maxAge: twoWeeksInSeconds * 1000 }));
-    app.use('/node_modules', express.static(path.join(__dirname, '../node_modules')), { maxAge: twoWeeksInSeconds * 1000 });
-}
+//if(config.PRODUCTION) {
+//    app.use(express.static(path.join(__dirname, '../build'), { maxAge: twoWeeksInSeconds * 1000 }));
+//} else {
+    app.use(express.static(path.join(__dirname, '../client_clam'), { maxAge: twoWeeksInSeconds * 1000 }));
+    app.use('/client_btc', express.static(path.join(__dirname, '../client_btc'), { maxAge: twoWeeksInSeconds * 1000 }));
+    app.use('/node_modules', express.static(path.join(__dirname, '../node_modules'), { maxAge: twoWeeksInSeconds * 1000 }));
+//}
 
 
 /** Login middleware
@@ -100,42 +114,45 @@ if(config.PRODUCTION) {
 app.use(function(req, res, next) {
     debug('incoming http request');
 
-    var sessionId = req.cookies.id;
+    if(req.secure) {
+        var sessionId = req.cookies.id;
 
-    if (!sessionId) {
-        res.header('Vary', 'Accept, Accept-Encoding, Cookie');
-        res.header('Cache-Control', 'public, max-age=60'); // Cache the logged-out version
-        return next();
-    }
-
-    res.header('Cache-Control', 'no-cache');
-    res.header("Content-Security-Policy", "frame-ancestors 'none'");
-
-
-    if (!lib.isUUIDv4(sessionId)) {
-        res.clearCookie('id');
-        return next();
-    }
-
-    database.getUserBySessionId(sessionId, function(err, user) {
-        if (err) {
-            res.clearCookie('id');
-            if (err === 'NOT_VALID_SESSION') {
-                return res.redirect('/');
-            } else {
-                console.error('[INTERNAL_ERROR] Unable to get user by session id ' + sessionId + ':', err);
-                return res.redirect('/error');
-            }
+        if (!sessionId) {
+            res.header('Vary', 'Accept, Accept-Encoding, Cookie');
+            res.header('Cache-Control', 'public, max-age=60'); // Cache the logged-out version
+            return next();
         }
-        user.advice = req.query.m;
-        user.error = req.query.err;
-        user.eligible = lib.isEligibleForGiveAway(user.last_giveaway);
-        user.admin = user.userclass === 'admin';
-        user.moderator = user.userclass === 'admin' ||
-                         user.userclass === 'moderator';
-        req.user = user;
-        next();
-    });
+
+        res.header('Cache-Control', 'no-cache');
+        res.header("Content-Security-Policy", "frame-ancestors 'none'");
+
+
+        if (!lib.isUUIDv4(sessionId)) {
+            res.clearCookie('id');
+            return next();
+        }
+
+        database.getUserBySessionId(sessionId, function(err, user) {
+            if (err) {
+                res.clearCookie('id');
+                if (err === 'NOT_VALID_SESSION') {
+                    return res.redirect('/');
+                } else {
+                    logger.error('[INTERNAL_ERROR] Unable to get user by session id ' + sessionId + ': %s', err);
+                    return res.redirect('/error');
+                }
+            }
+            user.advice = req.query.m;
+            user.error = req.query.err;
+            user.admin = user.userclass === 'admin';
+            user.moderator = user.userclass === 'admin' ||
+                             user.userclass === 'moderator';
+            req.user = user;
+            next();
+        });
+    } else {
+        res.redirect('https://' + req.headers.host + req.url);
+    }   
 
 });
 
@@ -171,11 +188,15 @@ routes(app);
 app.use(errorHandler);
 
 /**  Server **/
+/*
 var server = http.createServer(app);
-var io = socketIO(server); //Socket io must be after the lat app.use
+var secureserver = https.createServer(options, app);
+
+var io = socketIO(secureserver); //Socket io must be after the lat app.use
 io.use(ioCookieParser);
 
 /** Socket io login middleware **/
+/*
 io.use(function(socket, next) {
     debug('incoming socket connection');
 
@@ -195,7 +216,7 @@ io.use(function(socket, next) {
                 //socket.emit('err', 'NOT_VALID_SESSION');
                 next(new Error('NOT_VALID_SESSION'));
             } else {
-                console.error('[INTERNAL_ERROR] Unable to get user in socket by session ' + sessionId + ':', err);
+                logger.error('[INTERNAL_ERROR] Unable to get user in socket by session ' + sessionId + ': %s', err);
                 next(new Error('Unable to get the session on the server, logged as a guest.'));
                 //return socket.emit('err', 'INTERNAL_ERROR');
             }
@@ -205,22 +226,41 @@ io.use(function(socket, next) {
 
         //Save the user info in the socket connection object
         socket.user = user;
-        socket.user.admin = user.userclass === 'admin';
-        socket.user.moderator = user.userclass === 'admin' || user.userclass === 'moderator';
+        socket.admin = user.userclass === 'admin';
+        socket.moderator = user.userclass === 'admin' || user.userclass === 'moderator';
         next();
     });
 });
+*/
 
 
-var chatServer = new Chat(io);
+var port =  3841;
+var sslport = 3843;
 
-server.listen(config.PORT, function() {
-    console.log('Listening on port ', config.PORT);
+/*
+server.listen(port, function() {
+    logger.info('Listening on port %s', port);
 });
+*/
+
+var serverSsl = https.createServer(options, app).listen(sslport, function() {
+    console.log('Listening on ssl port ', sslport);
+});
+
+var server = http.createServer(app).listen(port, function() {
+    console.log('Listening on port ', port);
+});
+
+//var secureserver = https.createServer(options, app).listen(sslport, function() {
+//    console.log('Listening on post ', sslport)
+//});
+
+
 
 /** Log uncaught exceptions and kill the application **/
 process.on('uncaughtException', function (err) {
-    console.error((new Date).toUTCString() + ' uncaughtException:', err.message);
-    console.error(err.stack);
+    console.log(err)
+    logger.error("uncaughtException: %s", err.message);
+    logger.error("stack: %s", err.stack);
     process.exit(1);
 });

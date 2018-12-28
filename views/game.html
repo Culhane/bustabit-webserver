@@ -4,11 +4,14 @@
     <div class="row panel radius">
         <h4>Game #<strong>{{=it.game.id}}</strong> information</h4>
         <p>
-            <b>Busted At: </b> {{#def.format: { n: it.game.game_crash, decimals: 2 } }}x
+            <b>Busted At: </b> {{#def.format: { n: it.game.game_crash * 1e6, decimals: 2 } }}x
         </p>
         <p>
             <b>Played: </b>{{=it.game.created}} <small>{{=it.game.timeago}}</small>
         </p>
+        <hr>
+        <a href="/game/{{=it.game.id-1}}">&#xAB; Previous Roll</a>   
+        <a href="/game/{{=it.game.id+1}}">Next Roll  &#xbb;</a>
         <hr>
         <h6>Players</h6>
         <table class="user-table">
@@ -17,7 +20,6 @@
                 <td>Player</td>
                 <td>Bet</td>
                 <td>Cashed Out</td>
-                <td>Bonus</td>
                 <td>Profit</td>
             </tr>
           </thead>
@@ -30,25 +32,18 @@
                         </strong>
                     </td>
                     <td>
-                        {{#def.format: { n: play.bet } }} bits
+                        {{#def.format: { n: play.bet / 1e6, decimals: 6 } }} CLAM
                     </td>
                     <td>
-                        {{? play.cash_out}}
-                        {{#def.format: {n: play.cash_out / play.bet * 100, decimals: 2} }}x
+                        {{? play.crash_point}}
+                        {{#def.format: {n: (play.crash_point * 1e8) , decimals: 2} }}x
                         {{??}}
                         Lose
                         {{?}}
                     </td>
                     <td>
-                        {{? play.bonus }}
-                           {{#def.format: {n: play.bonus/play.bet* 100 * 100, decimals: 2} }}%
-                        {{??}}
-                          -
-                        {{?}}
-                    </td>
-                    <td>
-                        {{#def.format: { n: (play.cash_out ? play.cash_out : 0) - play.bet + ( play.bonus ? play.bonus : 0) , decimals: 2 } }}
-                        bits
+                        {{#def.format: { n: (play.cash_out ? play.cash_out : 0), decimals: 8 } }}
+                        CLAM
                     </td>
                 </tr>
             {{~}}
@@ -59,4 +54,4 @@
 
 #}}
 
-{{#def.include('./template/main_old')}}
+{{#def.include('./template/main')}}

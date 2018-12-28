@@ -1,15 +1,15 @@
 var database = require('./database');
 var timeago = require('timeago');
 var config = require('../config/config');
+var logger = require('winston');
 
 var stats;
 var generated;
-var bankrollOffset = config.BANKROLL_OFFSET;
 
 function getSiteStats() {
     database.getSiteStats(function(err, results) {
         if (err) {
-            console.error('[INTERNAL_ERROR] Unable to get site stats: \n' + err);
+            logger.error('[INTERNAL_ERROR] Unable to get site stats: %s', err);
             return;
         }
 
@@ -18,17 +18,23 @@ function getSiteStats() {
     });
 }
 
-setInterval(getSiteStats, 1000 * 60 * 20);
+setInterval(getSiteStats, 1000 * 60 * 5);
 getSiteStats();
+
+exports.stats = function(req, res, next) {
+    if (!stats) {
+        return next('Stats are loading');
+    }
+    var user = req.user;
+    res.render('stats', { user: user, generated: timeago(generated), stats: stats });
+
+};
 
 exports.index = function(req, res, next) {
     if (!stats) {
         return next('Stats are loading');
     }
     var user = req.user;
-
-    stats.bankroll_offset = bankrollOffset;
-
-    res.render('stats', { user: user, generated: timeago(generated), stats: stats });
+    res.render('index', { user: user, generated: timeago(generated), stats: stats });
 
 };

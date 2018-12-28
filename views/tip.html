@@ -1,0 +1,93 @@
+{{##def.page_title = 'Tip History' #}}
+
+{{##def.content:
+<script type="text/javascript">
+    function logout() {
+        if (document.getElementById('logout') ) {
+            if (confirm("Are you sure you want to log out?")) {
+                document.getElementById("logout").submit();
+            }
+        }
+    }
+</script>
+
+<form action="/logout" method="post" id='logout'></form>
+<div class="content row panel radius">
+    <div class="settings">
+        <div class="small-2 columns">
+            <ul class="menu">
+                <li>
+                    <a href="/account">Account</a>
+                </li>
+                <li>
+                  <a href="/invest">Invest</a>
+                </li>
+                <li>
+                    <a href="/deposit">Deposit</a>
+                </li>
+                <li >
+                   <a href="/withdraw"> Withdraw </a>
+                </li>
+                <li class="active">
+                    Tips
+                </li>
+                <li>
+                    <a href="/weeklyprizes">Prizes</a>
+                </li>
+                <li >
+                   <a href="/support">Support</a>
+                </li>
+                <li>
+                    <a href="/security">Security</a>
+                </li>
+                 <li>
+                    <a onclick="logout();">
+                        Logout
+                    </a>
+                </li>
+            </ul>
+        </div>
+         <div class="small-10 columns sets-content">
+            <h5 >Tip History</h5>
+            <hr>
+            {{?it.user.tips.length > 0}}
+                <table>
+                    <thead>
+                        <tr>
+                            <td>Currency</td>
+                            <td>Type</td>
+                            <td>From</td>
+                            <td>To</td>
+                            <td>Amount</td>
+                            <td class="show-for-large-up">Sent</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{~it.user.tips :tip:index}}
+                            <tr>
+                                <td>{{=tip.coin}}</td>
+                                {{?tip.type === "SEND"}}
+                                    <td><font color=red>SEND</font></td>
+                                {{??}}
+                                    <td><font color=green>RECEIVED</font></td>
+                                {{?}}
+                                <td>{{=tip.from_user}}</td>
+                                <td>{{=tip.to_user}}</td>
+                                <td>{{#def.format: {n: tip.amount, decimals: 8 } }}</td>
+                                <td class="show-for-large-up">{{=tip.created}}</td>
+                            </tr>
+                        {{~}}
+                    </tbody>
+                </table>
+            {{??}}
+                <br>
+                <br>
+                <br>
+                <p>You have no tips.</p>
+            {{?}}
+        </div>
+    </div>
+</div>
+
+#}}
+{{#def.include('./template/main')}}

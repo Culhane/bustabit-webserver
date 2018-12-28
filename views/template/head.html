@@ -1,0 +1,18 @@
+<head>
+    <title>{{# def.page_title || 'FreeBitcoins.com - Faucet, Arcade Games, Earn Cryptocurrency' }}</title>
+    <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="https://games.freebitcoins.com/img/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+    <meta charset="utf-8" />
+    <meta name="yandex-verification" content="3a3a22c15066d514" />
+    <meta name="msvalidate.01" content="D0652E9061AAE092B44EE9B30B217A0E" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="{{# def.page_description || 'Free Bitcoins offers an array of Casino & Arcade games specifically designed for cryptocurrency.  All games are provably fair.  Be the bank, invest & exchange.' }}" />
+    {{?it.table}}
+        <link rel="stylesheet" href="/css/game.css" />
+    {{??}}
+        <link rel="stylesheet" href="/css/app.css" />
+    {{?}}
+    <script type="text/javascript" src="https://games.freebitcoins.com/lib/foundation/js/vendor/modernizr.js"></script>
+</head>

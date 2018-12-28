@@ -1,13 +1,25 @@
-{{##def.page_title = 'Register' #}}
+{{##def.page_title = 'FreeBitcoins.com - Register BlastOFF - Dont bust your bits!' #}}
+{{##def.page_description = 'Register to join Free Bitcoins provably fair games!  Play the game or be the bank: more arcade and traditional casino games such as blackjack and roulette soon.' #}}
 
 {{##def.content:
 <script src='https://www.google.com/recaptcha/api.js'></script>
 <script type="text/javascript">
-		var submitEnabled = false;
-		function enableSubmit() {
-			submitEnabled = true;
+    function enableSubmit() {
       var s = document.getElementById('registerSubmit');
       s.style.display = 'block';
+    }
+
+    function onAgreeClick() {
+      var agree = document.getElementById('agree').checked;
+      var submit = document.getElementById('registerSubmit');
+      var acceptTerms = document.getElementById('acceptTerms');
+      if(agree) {
+        submit.disabled = false;
+        acceptTerms.style.display = 'none';
+      } else {
+        submit.disabled = true;
+        acceptTerms.style.display = 'block';
+      }
     }
 
     window.onload = function () {
@@ -24,64 +36,45 @@
         } else document.getElementById("confirmation").setCustomValidity('');
     }
 </script>
-        <div class="register">
-            <form action="/register" method="post" onsubmit="return submitEnabled;">
-                <div class="row">
-                    <div class="large-7 columns input">
-                        <h5>Create a new account <small><a href="login">already have one?</a></small></h5>
-                        <hr>
-                    </div>
-
-                    <div class="large-7 columns input">
-
-                        <div class="row">
-                            <div class="large-3 columns">
-                                <label for="username">Username</label>
-                            </div>
-                            <div class="large-9 columns">
-                                <input id="username" type="text" name="user[name]" value="{{?it.values}}{{!it.values.name}}{{?}}" autocomplete="off" pattern="[A-Za-z0-9_\-]{3,16}" title="Username only allowed alphanumeric, hyphen and underscore" required />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="large-7 columns input">
-
-                        <div class="row">
-                            <div class="large-3 columns">
-                                <label for="email">*Recovery Email</label>
-                            </div>
-                            <div class="large-9 columns">
-                                <input type="email" id="email" value="{{?it.values}}{{!it.values.email}}{{?}}" placeholder="you@email.com" name="user[email]" autocomplete="off"/>
-                                <small><b>* Optional</b> although we <b>strongly advise you to use one</b>, otherwise it is <b>not possible</b> to password reset!</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="large-7 columns input">
-                        <div class="row">
-                            <div class="large-3 columns">
-                                <label>Password</label>
-                            </div>
-                            <div class="large-9 columns">
-                                <input id="password" type="password" value="{{?it.values}}{{!it.values.password}}{{?}}" name="user[password]" autocomplete="off" pattern=".{7,200}" title="Password should be at least 7 characters" required/>
-                                <small>Pick something secure, at least 7 characters</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="large-7 columns input">
-                        <div class="row">
-                            <div class="large-3 columns">
-                                <label>Confirm Password</label>
-                            </div>
-                            <div class="large-9 columns">
-                                <input id="confirmation" type="password" value="{{?it.values}}{{!it.values.confirm}}{{?}}" name="user[confirm]" autocomplete="off" pattern=".{7,200}" data-equal-id="password" required/>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="large-7 columns">
-                        <div class="g-recaptcha" data-sitekey="{{=it.recaptchaKey}}" data-callback="enableSubmit"></div>
-                        <input id="registerSubmit" style="display: none" class="border-button blue" type="submit" value="Register"/>
-                    </div>
+        <div class="panel auth-con content">
+            <form action="/register" method="post">
+                <h5>Create a new account <small><a href="login">Already have one?</a></small></h5>
+                <hr>
+                <div class="field">
+                  <label>Username</label>
+                  <input type="text" name="user[name]" value="{{?it.values}}{{!it.values.name}}{{?}}" autocomplete="off" pattern="[A-Za-z0-9]{3,16}" title="Username only allowed alphanumeric" required />
+                </div>
+                <div class="field">
+                  <label for="email">Recovery Email (Optional)</label>
+                  <input type="email" id="email" value="{{?it.values}}{{!it.values.email}}{{?}}" name="user[email]" autocomplete="off"/>
+                </div>
+                <div class="field">
+                  <label>Password</label>
+                  <input id="password" type="password" value="{{?it.values}}{{!it.values.password}}{{?}}" name="user[password]" autocomplete="off" pattern=".{7,200}" title="Password should be at least 7 characters"/>
+                  <small>Pick something secure, at least 7 characters</small>
+                </div>
+                <div class="field">
+                  <label>Confirm Password</label>
+                  <input id="confirmation" type="password" value="{{?it.values}}{{!it.values.confirm}}{{?}}" name="user[confirm]" autocomplete="off" pattern=".{7,200}" data-equal-id="password" required=""/>
+                </div>
+                <div class="field">
+                    <input type="checkbox" id="agree" onClick="onAgreeClick()">
+                        <label for="agree">I agree</label>
+                    </input>
+                    <p class="small">
+                    By accessing Blast Off (freebitcoins.com) or its service:<br/>
+                    Acknowledge that you have read and agree to the website's <a href="/faq" target="_blank">FAQ</a> <br/>
+                    Attest that you are 18 years old or older. <br/>
+                    Affirm that you are in a jurisdiction where the Blast Off service is legal
+                    </p>
+                </div>
+                        <div class="g-recaptcha" data-sitekey="6LcoxGIUAAAAAMWuINwDI_60NigPd9aa9ICnKMf3" data-callback="enableSubmit"></div>
+                        <input id="registerSubmit" style="display: none" class="button green right" type="submit" value="Register" />
+                        <p class="small" id="acceptTerms" style="display: block;">
+                          You must accept the Terms &amp; Conditions before you can register.
+                        </p>
                 </div>
             </form>
         </div>
 #}}
-{{#def.include('./template/main_old')}}
+{{#def.include('./template/main')}}

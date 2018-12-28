@@ -1,0 +1,58 @@
+{{##def.page_title = 'FreeBitcoins.com - BlastOFF CLAM Game Info - Provably Fair Game' #}}
+{{##def.page_description = 'Free Bitcoins provably fair online gaming using cryptocurrency with an algorithm that is mathematically fair. BAC has been a part of the community since 2013.' #}}
+
+{{##def.content:
+    <div class="row panel radius">
+        <h4>Game #<strong>{{=it.game.id}}</strong> information</h4>
+        <p>
+            <b>Busted At: </b> {{#def.format: { n: it.game.game_crash * 1e6, decimals: 2 } }}x
+        </p>
+        <p>
+            <b>Played: </b>{{=it.game.created}} <small>{{=it.game.timeago}}</small>
+        </p>
+        <hr>
+        <a href="/game/{{=it.game.id-1}}">&#xAB; Previous Roll</a>   
+        <a href="/game/{{=it.game.id+1}}">Next Roll  &#xbb;</a>
+        <hr>
+        <h6>Players</h6>
+        <table class="user-table">
+          <thead>
+            <tr>
+                <td>Player</td>
+                <td>Bet</td>
+                <td>Cashed Out</td>
+                <td>Profit</td>
+            </tr>
+          </thead>
+          <tbody>
+            {{~it.plays :play:index}}
+                <tr {{?!play.cash_out}}class="lose"{{?}}>
+                    <td>
+                        <strong>
+                            <a href="/user/{{=play.username}}">{{=play.username}}</a>
+                        </strong>
+                    </td>
+                    <td>
+                        {{#def.format: { n: play.bet / 1e6, decimals: 6 } }} CLAM
+                    </td>
+                    <td>
+                        {{? play.crash_point}}
+                        {{#def.format: {n: (play.crash_point * 1e8) , decimals: 2} }}x
+                        {{??}}
+                        Lose
+                        {{?}}
+                    </td>
+                    <td>
+                        {{#def.format: { n: (play.cash_out ? play.cash_out : 0), decimals: 8 } }}
+                        CLAM
+                    </td>
+                </tr>
+            {{~}}
+          </tbody>
+        </table>
+        <h6><b>Hash:</b> <a href="/faq#fair">{{=it.game.hash}}</a></h6>
+    </div>
+
+#}}
+
+{{#def.include('./template/main')}}

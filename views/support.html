@@ -12,25 +12,32 @@
 </script>
 <form action="/logout" method="post" id='logout'></form>
 <div class="content row panel radius">
-
     <div class="settings">
         <div class="small-2 columns">
-            <ul class="menu">
+        <ul class="menu">
                 <li>
                     <a href="/account">Account</a>
                 </li>
                 <li>
-                    <a href="/security">Security</a>
+                  <a href="/invest">Invest</a>
                 </li>
                 <li>
                     <a href="/deposit">Deposit</a>
                 </li>
                 <li>
-                    <a href="withdraw">Withdraw</a>
+                    <a href="/withdraw">Withdraw</a>
                 </li>
-
+                <li>
+                    <a href="/tip">Tip History</a>
+                </li>
+                <li>
+                    <a href="/weeklyprizes">Prizes</a>
+                </li>
                 <li class="active">
                     Support
+                </li>
+                <li>
+                    <a href="/security">Security</a>
                 </li>
                 <li>
                     <a onclick="logout();">
@@ -40,25 +47,9 @@
             </ul>
         </div>
         <div class="small-10 columns sets-content">
-            <h5>Need help? please contact us</h5>
-                <hr>
-                <div class="row contact">
-                    <form action="/support" id="contact" method="post">
-
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" value="{{!it.user.email}}" required=""/>
-
-
-
-                        <label for="message">Message</label>
-                        <textarea rows="10" id="message" name="message" required> </textarea>
-                        <input type="submit" class="border-button right blue" value="Send!"/>
-                    </form>
-
-                </div>
-
+            <h5>Need help? Please visit <a href="https://freebitcoins.supportsystem.com">https://freebitcoins.supportsystem.com/</a> to open a support ticket</h5>
         </div>
     </div>
 </div>
 #}}
-{{#def.include('./template/main_old')}}
+{{#def.include('./template/main')}}

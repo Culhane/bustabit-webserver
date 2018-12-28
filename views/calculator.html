@@ -1,10 +1,12 @@
-{{##def.page_title = 'Calculator' #}}
+{{##def.page_title = 'FreeBitcoins.com - BlastOFF Crash Calculator - Bust Odds' #}}
+{{##def.page_description = 'This automated tool calculates the house edge for Free Bitcoins game Blast OFF.  See your chance to win and your odds of busting before you play with crypto.' #}}
+
 {{##def.content:
     <h1>Odds Calculator</h1>
     <div id="calculator">
         Loading Calculator...
     </div>
     <!--RequireJs-->
-    <script data-main="/scripts/calculator-main" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.18/require.min.js"></script>
+    <script data-main="../scripts/calculator-main" src="../scripts/lib/require.js"></script>
 #}}
-{{#def.include('./template/main_old')}}
+{{#def.include('./template/main')}}

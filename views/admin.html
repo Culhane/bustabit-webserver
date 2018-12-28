@@ -1,0 +1,80 @@
+{{##def.page_title = 'Your account' #}}
+{{##def.content:
+<style>
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey; 
+    border-radius: 10px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: lightgrey; 
+    border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #b30000; 
+}
+</style>
+<div class="content row panel radius">
+
+    <div class="settings">
+        <div class="small-2 columns">
+            <h5><b>Admin Panel</b></h5>
+            <ul class="menu">
+                <li class="active">
+                    Overview
+                </li>
+                <li>
+                  <a href="/admin/commissions?p=1">Commissions</a>
+                </li>
+                <li>
+                  <a href="/admin/weeklycommissions?p=1">Weekly</a>
+                </li>
+                <li>
+                    <a href="/admin/recentdeposits">Deposits</a>
+                </li>
+                <li>
+                    <a href="/admin/recentwithdraws">Withdraws</a>
+                </li>
+                <li>
+                    <a href="/admin/btcfees">Btc Fees</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="small-10 columns sets-content">
+            <h5>Admin (If your here your either a h4zor or i <3 you)</h5>
+            <h4>Btc Total: <font color=green>{{#def.format:{n: it.info.btcTotal, decimals:8} }}</font></h4>
+            <h4>Btc Hot Wallet Balance:  <font color=green>{{#def.format:{n: it.info.btcHw, decimals:8} }}</font></h4>
+            <h4>Btc Cold Wallet Balance:  <font color=green>{{#def.format:{n: it.info.btcCw, decimals:8} }}</font></h4>
+            <hr>
+            <h4>Clam Total: <font color=green>{{#def.format:{n: it.info.clamTotal, decimals:8} }}</font></h4>
+            <h4>Clam Hot Wallet Balance:  <font color=green>{{#def.format:{n: it.info.clamHw, decimals:8} }}</font></h4>
+            <h4>Clam Warm Wallet Balance:  <font color=green>{{#def.format:{n: it.info.clamWw, decimals:8} }}</font></h4>
+
+            <hr>
+            <h3>Stake Overview</h5>
+            <h4>Held:  {{#def.format:{n: it.info.stake.held / 1e6, decimals:8} }}</h4>
+            <h4>Total Stakes:  {{#def.format:{n: it.info.stake.stake_count * 1e8, decimals:0} }}</h4>
+            <h4>Total CLAM:  {{#def.format:{n: it.info.stake.stake_total / 1e6, decimals:8} }}</h4>
+            <h4>Orphan Count:  {{#def.format:{n: it.info.stake.orphan_count * 1e8, decimals:0} }}</h4>
+            <hr>
+            <h3>Commision Overview</h5>
+            <h4>Staking: {{#def.format:{n: it.info.commissions.stakeSum / 1e6, decimals:8} }} </h4>
+            <h4>Gambling (CLAM): {{#def.format:{n: it.info.commissions.gamblingSumClam / 1e6, decimals:8} }} </h4>
+            <h4>Gambling (BTC): {{#def.format:{n: it.info.commissions.gamblingSumBtc / 1e6, decimals:8} }} </h4>
+            <h4>Withdraw (BTC): {{#def.format:{n: it.info.btcWithdrawCommission, decimals:8} }} </h4>
+
+        </div>
+    </div>
+    </div>
+#}}
+{{#def.include('./template/main')}}
